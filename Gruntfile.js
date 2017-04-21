@@ -20,6 +20,13 @@ module.exports = function(grunt) {
 			},
 			all: ['js/*.js']
 		},
+    'http-server': {
+      dev: {
+        root: 'public',
+        port: 3115,
+        runInBackground: true
+      }
+    },
 		concat: {
 			basic_and_extras: {
 				files: {
@@ -38,6 +45,6 @@ module.exports = function(grunt) {
 		'watch'
 	]);
 	grunt.registerTask('build', ['jshint', 'concat']);
-	grunt.registerTask('default', ['build', 'dev']);
+	grunt.registerTask('default', ['build', 'http-server', 'dev']);
 
 };
