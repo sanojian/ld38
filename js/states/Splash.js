@@ -12,6 +12,7 @@ SplashScreen.prototype = {
     this.game.add.image(0, 0, 'splashBackground');
 
     console.log('waiting for space...');
+    
   },
   update: function() {
     if (g_game.spaceKey.isDown) {
