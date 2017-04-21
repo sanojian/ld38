@@ -2,5 +2,5 @@ ld38
 ====
 Build Instructions
 ------------------
-npm install
-grunt
+1. npm install
+2. grunt
