@@ -252,6 +252,10 @@ function checkCollision(ball, boxes) {
   var boundsA = ball.getBounds();
 
   boxes.forEach(function(box) {
+    if (box.colorIndex !== ball.colorIndex) {
+      // wrong color
+      return;
+    }
     var boundsB = box.getBounds();
 
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
