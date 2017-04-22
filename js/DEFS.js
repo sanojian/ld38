@@ -2,9 +2,10 @@ window.g_game = {
 	sounds: {},
 	//gameWidth: window.innerWidth * window.devicePixelRatio,
 	//gameHeight: window.innerHeight * window.devicePixelRatio,
-	baseWidth: 640,
-	baseHeight: 480,
-	scale: 3,
+	baseWidth: 480,
+	baseHeight: 640,
+	scale: 1,
 	masterVolume: 0.3,
-	sfx: {}
+	sfx: {},
+	gravity: 2500
 };
