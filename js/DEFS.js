@@ -7,5 +7,6 @@ window.g_game = {
 	scale: 1,
 	masterVolume: 0.3,
 	sfx: {},
-	gravity: 2500
+	gravity: 2500,
+	colors: ['Red', 'Green', 'Blue', 'Yellow', 'Orange']
 };

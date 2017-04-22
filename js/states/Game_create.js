@@ -17,18 +17,31 @@ GameState.prototype.create = function() {
   var boxes = this.game.physics.p2.createCollisionGroup();
   var walls = this.game.physics.p2.createCollisionGroup();
 
-  var world = this.game.add.sprite(this.game.width/2, 0, 'world');
+  var world = this.game.add.sprite(this.game.width/2, -160, 'world');
   world.anchor.set(0.5);
   this.game.physics.p2.enable(world, false);
+  world.body.setCircle(world.width/2);
   world.body.collideWorldBounds = false;
   world.body.data.gravityScale = 0;
+  g_game.world = world;
+
+  var ground = this.game.add.sprite(this.game.width/2, 500, 'ground');
+  ground.anchor.set(0.5);
+  this.game.physics.p2.enable(ground, false);
+  ground.body.kinematic = true;
+  ground.body.velocity.y = -15;
+  ground.body.setCollisionGroup(walls);
+  ground.body.collides([boxes]);
 
 
   g_game.boxes = this.game.add.group();
 
-  function addBox(x, y, game) {
-    var box = game.add.sprite(x, y, 'box');
+  function addBox(x, y, index, game) {
+    var color = g_game.colors[index];
+
+    var box = game.add.sprite(x, y, 'box' + color);
     box.anchor.set(0.5);
+    box.colorIndex = index;
     game.physics.p2.enable(box, false);
     box.body.collideWorldBounds = false;
     box.body.setCollisionGroup(boxes);
@@ -36,30 +49,33 @@ GameState.prototype.create = function() {
     g_game.boxes.add(box);
   }
 
-  for (var i = 0; i < 2; i++) {
-    for (var j = 0; j < 5; j++) {
-      addBox(this.game.width/2 - 32 + i*64, 400 - j*100, this.game);
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+      var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+      addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
     }
   }
 
-  var ground = this.game.add.sprite(0, 0, 'ground');
-  ground.anchor.set(0.5);
-  ground.x = this.game.width/2;
-  ground.y = 500;
-  this.game.physics.p2.enable(ground, false);
-  ground.body.kinematic = true;
-  ground.body.velocity.y = -15;
-  ground.body.setCollisionGroup(walls);
-  ground.body.collides([boxes]);
+  g_game.balls = this.game.add.group();
 
-  var ball = this.game.add.sprite(0, 0, 'ball');
-  ball.anchor.set(0.5);
-  this.game.physics.p2.enable(ball, false);
-  ball.body.setCircle(ball.width/2);
-  ball.body.collideWorldBounds = false;
-  //game.elements.bball.body.setCollisionGroup game.elements.noCollisionGroup
-  g_game.ball = ball;
-  resetBall(this.game, ball);
+  function addBall(index, game) {
+    var color = g_game.colors[index];
+
+    var ball = game.add.sprite(0, 0, 'ball' + color);
+    ball.colorIndex = index;
+    ball.anchor.set(0.5);
+    game.physics.p2.enable(ball, false);
+    ball.body.setCircle(ball.width/2);
+    ball.body.collideWorldBounds = false;
+    g_game.balls.add(ball);
+    resetBall(game, ball);
+  }
+
+  addBall(0, this.game);
+  addBall(1, this.game);
+  addBall(2, this.game);
+  addBall(3, this.game);
+  addBall(4, this.game);
 
   // add events to check for swipe
   this.game.input.onDown.add(start_swipe, this);
@@ -72,7 +88,7 @@ GameState.prototype.create = function() {
 function resetBall(game, ball) {
 
   ball.canBeShot = true;
-  ball.body.x = game.width/2;
+  ball.body.x = game.width/2 - 128 + ball.colorIndex * 64;
   ball.body.y = 550;
   ball.body.velocity.x = 0;
   ball.body.velocity.y = 0;
@@ -80,7 +96,7 @@ function resetBall(game, ball) {
   ball.body.rotation = 0;
   ball.falling = false;
   ball.body.rotateRight(0);
-  ball.scale.set(0.9);
+  ball.scale.set(1);
 
   ball.alpha = 1;
 
@@ -88,7 +104,13 @@ function resetBall(game, ball) {
 
 function start_swipe(pointer) {
 
-  g_game.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+  g_game.balls.forEach(function(ball) {
+    if (Math.abs(pointer.x - ball.x) < ball.width/2 && Math.abs(pointer.y - ball.y) < ball.width/2) {
+      g_game.ball = ball;
+      g_game.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+    }
+
+  });
 
 }
 
