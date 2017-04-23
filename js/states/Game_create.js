@@ -35,7 +35,6 @@ GameState.prototype.create = function() {
   ground.initFlag = false;
   g_game.ground = ground;
 
-
   g_game.boxes = this.game.add.group();
 
   var countdown = 3;
