@@ -14,6 +14,8 @@ SplashScreen.prototype = {
 		this.load.image('box_half', 'assets/gfx/shapes/box_half.png');
 		this.load.image('box_flat', 'assets/gfx/shapes/box_flat.png');
 
+		this.load.image('pillBackground', 'assets/gfx/pillBackground.png');
+
 		this.load.image('ballRed', 'assets/gfx/ballRed.png');
 		this.load.image('ballGreen', 'assets/gfx/ballGreen.png');
 		this.load.image('ballBlue', 'assets/gfx/ballBlue.png');

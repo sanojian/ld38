@@ -120,6 +120,9 @@ GameState.prototype.create = function() {
 
     g_game.next_level = next_level;
 
+    var pillBack = this.game.add.sprite(this.game.width/2, 550, 'pillBackground');
+    pillBack.anchor.set(0.5);
+
 
   g_game.balls = this.game.add.group();
 
