@@ -14,6 +14,7 @@ GameState.prototype.create = function() {
   this.game.physics.p2.gravity.y = g_game.gravity;
 
   var boxes = this.game.physics.p2.createCollisionGroup();
+  var balls = this.game.physics.p2.createCollisionGroup();
   var walls = this.game.physics.p2.createCollisionGroup();
 
   var world = this.game.add.sprite(this.game.width/2, -160, 'world');
@@ -70,7 +71,7 @@ GameState.prototype.create = function() {
           g_game.ground.body.velocity.y = ground_velocity;
 
           var stack = initalizeStack(box_row_height, box_row_width);
-          stackBoxes(this.game, boxes, walls, box_row_height, box_row_width, ground, stack);
+          stackBoxes(this.game, boxes, walls, balls, box_row_height, box_row_width, ground, stack);
 
           g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
         }, this);
@@ -115,7 +116,7 @@ GameState.prototype.create = function() {
      g_game.level+=1;
 
      var stack = initalizeStack(box_row_height, box_row_width);
-     stackBoxes(this.game, boxes, walls, box_row_height, box_row_width, ground, stack);
+     stackBoxes(this.game, boxes, walls, balls, box_row_height, box_row_width, ground, stack);
 
       win_text.text = naggers[this.game.rnd.integerInRange(0,naggers.length-1)];
       win_text.visible = true;
@@ -153,8 +154,16 @@ GameState.prototype.create = function() {
     game.physics.p2.enable(ball, false);
     ball.body.setCircle(ball.width/2);
     ball.body.collideWorldBounds = false;
+    ball.body.setCollisionGroup(balls);
+    ball.body.collides([boxes]);
     g_game.balls.add(ball);
     resetBall(game, ball);
+    ball.body.onBeginContact.add(function(target) {
+      target.sprite.kill();
+      if(g_game.score_flag === false){
+      	g_game.add_score.dispatch();
+      }
+    }, game);
   }
 
   addBall(0, this.game);
@@ -187,7 +196,7 @@ GameState.prototype.create = function() {
 
 };
 
-function stackBoxes(game, boxes, walls, columns, rows, ground, stack) {
+function stackBoxes(game, boxes, walls, balls, columns, rows, ground, stack) {
   for (var y = 0; y < stack.length; y++) {
     var box = game.add.sprite(0, 0, stack[y].name);
     box.x = ground.x - (columns * g_game.blockSize/2) + box.width/2 + stack[y].x * g_game.blockSize/2;
@@ -205,11 +214,11 @@ function stackBoxes(game, boxes, walls, columns, rows, ground, stack) {
     }
     box.body.setCollisionGroup(boxes);
     box.body.collides([walls, boxes]);
-    box.body.debug = true;
+    //box.body.debug = true;
     box.body.kinematic = true;
     box.body.velocity.y = ground.body.velocity.y;
     box.body.setCollisionGroup(boxes);
-    box.body.collides([walls, boxes]);
+    box.body.collides([walls, balls, boxes]);
     g_game.boxes.add(box);
   }
 }

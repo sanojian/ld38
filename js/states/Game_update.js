@@ -31,7 +31,7 @@ GameState.prototype.update = function() {
     currentBall.body.rotateRight(currentBall.mySpin);
 
     // timer tells when the ball reaches distance
-    this.game.time.events.add(Phaser.Timer.SECOND * 0.6, function() { checkCollision(currentBall, g_game.boxes, this); });
+    //this.game.time.events.add(Phaser.Timer.SECOND * 0.6, function() { checkCollision(currentBall, g_game.boxes, this); });
 
     // reset the ball to be thrown again
     this.game.time.events.add(Phaser.Timer.SECOND * 0.6, function() { resetBall(self.game, currentBall, this); });
@@ -58,7 +58,7 @@ function checkWorldBoxesCollision() {
   });
 }
 
-function checkCollision(ball, boxes) {
+/*function checkCollision(ball, boxes) {
   var boundsA = ball.getBounds();
 
   boxes.forEach(function(box) {
@@ -77,7 +77,7 @@ function checkCollision(ball, boxes) {
       }
     }
   });
-}
+}*/
 
 function update_text(){
 	g_game.score_text.text = g_game.score;
