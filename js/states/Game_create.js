@@ -5,7 +5,6 @@ var GameState = function(game) {
 GameState.prototype.create = function() {
 
   this.game.add.image(0, 0, 'background');
-
   this.game.physics.startSystem(Phaser.Physics.P2JS);
   this.game.physics.p2.restitution = 0.4;
   this.game.physics.p2.setImpactEvents(true);
@@ -25,42 +24,112 @@ GameState.prototype.create = function() {
   world.body.data.gravityScale = 0;
   g_game.world = world;
 
-  var ground = this.game.add.sprite(this.game.width/2, 500, 'ground');
+  var ground_starting_pos = 500;
+  var ground_velocity = -15; 
+  var box_row_width = 4;
+  var box_row_height = 1;
+
+  var ground = this.game.add.sprite(this.game.width/2, ground_starting_pos, 'ground');
   ground.anchor.set(0.5);
   this.game.physics.p2.enable(ground, false);
   ground.body.kinematic = true;
-  ground.body.velocity.y = -15;
+  ground.body.velocity.y = ground_velocity;
   ground.body.setCollisionGroup(walls);
   ground.body.collides([boxes]);
+  ground.initFlag = false;
+  g_game.ground = ground;
 
+  
 
   g_game.boxes = this.game.add.group();
 
+
+  var lose_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),"TRY AGAIN!",0.5,0.5);
+  lose_text.visible = false;
+  g_game.lose_text = lose_text;
+
+  var reset_game = new Phaser.Signal();
+  reset_game.add(function(){
+    g_game.ground.reset(this.game.width/2, 500);
+    g_game.score = 0;
+    g_game.level = 0;
+    g_game.boxes.removeAll(true); 
+  for (var i = 0; i < box_row_width; i++) {
+    for (var j = 0; j < box_row_height; j++) {
+      var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+    }
+  }
+  lose_text.visible = true;
+  this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){
+  lose_text.visible = false;
+   g_game.ground.body.velocity.y = ground_velocity;
+  }, this);
+
+  },this);
+
+  g_game.SCORE_INTERVAL = 20;
+  g_game.reset_game = reset_game;
+  var add_score = new Phaser.Signal();
+  add_score.add(function(){
+  	g_game.score+=g_game.SCORE_INTERVAL;
+  },true);
+  g_game.add_score = add_score;
+   
+   //its a new level! make everything harder >:D 
+   var naggers = ["AMAZING!","NICE!","MARVELOUS!","GOOD!"];
+  var win_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),naggers[this.game.rnd.integerInRange(0,naggers.length)],0.5,0.5);
+  win_text.visible = false;
+  var next_level = new Phaser.Signal();
+  next_level.add(function(){
+   ground_starting_pos+= 64;
+   g_game.ground.reset(this.game.width/2, ground_starting_pos);
+   ground_velocity-=4;
+   g_game.ground.body.velocity.y = ground_velocity;
+   g_game.boxes.removeAll(true);
+   box_row_height+=1;
+   g_game.level+=1;
+   for (var i = 0; i < box_row_width; i++) {
+   for (var j = 0; j < box_row_height; j++) {
+   var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+   addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+   }
+  }
+  win_text.text = naggers[this.game.rnd.integerInRange(0,naggers.length)];
+  win_text.visible = true;
+  this.game.time.events.add(Phaser.Timer.SECOND * 0.2, function(){
+  win_text.visible = false;
+  }, this);
+
+  },this);
+  g_game.next_level = next_level;
+
+
+
   function addBox(x, y, index, game) {
     var color = g_game.colors[index];
-
     var box = game.add.sprite(x, y, 'box' + color);
     box.anchor.set(0.5);
     box.colorIndex = index;
     game.physics.p2.enable(box, false);
-    box.body.collideWorldBounds = false;
+    box.body.collideWorldBounds = true;
+    box.body.outOfBoundsKill = true;
     box.body.setCollisionGroup(boxes);
     box.body.collides([walls, boxes]);
     g_game.boxes.add(box);
   }
 
-  for (var i = 0; i < 4; i++) {
-    for (var j = 0; j < 4; j++) {
+
+  for (var i = 0; i < box_row_width; i++) {
+    for (var j = 0; j < box_row_height; j++) {
       var colorIndex = Math.floor(Math.random() * g_game.colors.length);
-      addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
     }
   }
-
   g_game.balls = this.game.add.group();
 
   function addBall(index, game) {
     var color = g_game.colors[index];
-
     var ball = game.add.sprite(0, 0, 'ball' + color);
     ball.colorIndex = index;
     ball.anchor.set(0.5);
@@ -82,6 +151,26 @@ GameState.prototype.create = function() {
   this.game.input.onUp.add(end_swipe, this);
 
   console.log('game started');
+
+  var level = 0;
+  var score = 0;
+  var score_flag = false;
+  g_game.score_flag = score_flag;
+  var lvl_dis_text = add_text(this.game,0,Math.round(this.game.height/2),"LEVEL");
+  var score_dis_text = add_text(this.game,Math.round(this.game.width - 4),Math.round(this.game.height/2),"SCORE",1,0);
+  var score_text = add_digit_text(this.game,Math.round(0),Math.round(score_dis_text.height),score.toString(),1,0);
+  var lvl_text = add_digit_text(this.game,0,Math.round(lvl_dis_text.height),level.toString(),0,0);
+  lvl_dis_text.addChild(lvl_text);
+  score_dis_text.addChild(score_text);
+ 
+  g_game.level = level;
+  g_game.score = score;
+  g_game.lvl_text = lvl_text;
+  g_game.score_text = score_text;
+
+
+
+
 };
 
 
@@ -131,3 +220,27 @@ function end_swipe(pointer) {
 
   delete g_game.start_swipe_point;
 }
+
+
+
+function add_text(game,x,y,text,anchorX,anchorY){
+   	if (anchorX === undefined) { anchorX = 0; }
+	if (anchorY === undefined) { anchorX = 0; }
+	var bitmapText = game.add.bitmapText(x, y, 'titlescreen', text, 8);
+	bitmapText.anchor.set(anchorX, anchorY);
+	bitmapText.fixedToCamera = true;
+	return bitmapText;
+}
+
+
+
+function add_digit_text(game,x,y,text,anchorX,anchorY){
+   	if (anchorX === undefined) { anchorX = 0; }
+	if (anchorY === undefined) { anchorX = 0; }
+	var bitmapText = game.add.bitmapText(x, y, 'digits', text, 32);
+	bitmapText.anchor.set(anchorX, anchorY);
+	bitmapText.fixedToCamera = true;
+	return bitmapText;
+}
+
+

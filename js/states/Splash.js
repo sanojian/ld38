@@ -21,7 +21,11 @@ SplashScreen.prototype = {
 		this.load.image('world', 'assets/gfx/world.png');
 
 		this.load.spritesheet('explosion', 'assets/gfx/explosion.png', 32, 32);
-
+    
+    this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');
+    this.load.bitmapFont('digits', 'assets/fonts/digit_8x8.png','assets/fonts/digit_8x8.xml');
+    
+  
 	},
 	create: function() {
     g_game.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

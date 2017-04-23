@@ -2,7 +2,7 @@ GameState.prototype.update = function() {
 
   var self = this;
 
-  if (g_game.swipe && g_game.ball.canBeShot) {
+  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false) {
 
     var currentBall = g_game.ball;
     //game.elements.shootSound.play();
@@ -40,17 +40,20 @@ GameState.prototype.update = function() {
   }
 
   checkWorldBoxesCollision();
+  update_text();
+  check_boxes();
+
 };
 
 function checkWorldBoxesCollision() {
   var boundsA = g_game.world.getBounds();
-
   g_game.boxes.forEach(function(box) {
     var boundsB = box.getBounds();
 
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
-      g_game.world.game.state.start('game');
+      g_game.reset_game.dispatch();
+      
     }
   });
 }
@@ -68,6 +71,21 @@ function checkCollision(ball, boxes) {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       box.destroy();
+      if(g_game.score_flag == false){
+      	g_game.add_score.dispatch();
+
+      } 
     }
   });
+}
+
+function update_text(){
+	g_game.score_text.text = g_game.score;
+    g_game.lvl_text.text = g_game.level;
+}
+
+function check_boxes(){
+	if(g_game.boxes.countLiving() < 1){
+		g_game.next_level.dispatch();
+	}
 }
