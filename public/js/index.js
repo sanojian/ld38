@@ -102,13 +102,17 @@ GameState.prototype.create = function() {
 
   g_game.boxes = this.game.add.group();
 
-
+var countdown = 3;
+g_game.countdown = countdown;
+var countdown_text = add_digit_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),"3",0.5,0.5);
+g_game.countdown_text = countdown_text;
+  var lose_counter = 0;
   var lose_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),"TRY AGAIN!",0.5,0.5);
   lose_text.visible = false;
   g_game.lose_text = lose_text;
-
   var reset_game = new Phaser.Signal();
   reset_game.add(function(){
+  	lose_counter+=1;
     g_game.ground.reset(this.game.width/2, 500);
     g_game.score = 0;
     g_game.level = 0;
@@ -119,16 +123,35 @@ GameState.prototype.create = function() {
        addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
     }
   }
+  if(lose_counter > 1){
   lose_text.visible = true;
   this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){
   lose_text.visible = false;
    g_game.ground.body.velocity.y = ground_velocity;
   }, this);
+}else{
+	//first time playing
+	countdown=3;
+    this.game.time.events.repeat(Phaser.Timer.SECOND, 3, function(){
+    if(countdown > 0){
+    countdown-=1;
+    g_game.countdown = countdown;
+    
 
+     }
+     if(countdown == 0)
+     {
+      g_game.ground.body.velocity.y = ground_velocity;
+     }
+
+    }, this);
+
+    }
   },this);
 
   g_game.SCORE_INTERVAL = 20;
   g_game.reset_game = reset_game;
+  reset_game.dispatch();
   var add_score = new Phaser.Signal();
   add_score.add(function(){
   	g_game.score+=g_game.SCORE_INTERVAL;
@@ -179,12 +202,12 @@ GameState.prototype.create = function() {
   }
 
 
-  for (var i = 0; i < box_row_width; i++) {
-    for (var j = 0; j < box_row_height; j++) {
-      var colorIndex = Math.floor(Math.random() * g_game.colors.length);
-       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
-    }
-  }
+  // for (var i = 0; i < box_row_width; i++) {
+  //   for (var j = 0; j < box_row_height; j++) {
+  //     var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+  //      addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+  //   }
+  // }
   g_game.balls = this.game.add.group();
 
   function addBall(index, game) {
@@ -303,12 +326,11 @@ function add_digit_text(game,x,y,text,anchorX,anchorY){
 }
 
 
-
 GameState.prototype.update = function() {
 
   var self = this;
 
-  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false) {
+  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false && g_game.countdown == 0) {
 
     var currentBall = g_game.ball;
     //game.elements.shootSound.play();
@@ -388,6 +410,10 @@ function checkCollision(ball, boxes) {
 function update_text(){
 	g_game.score_text.text = g_game.score;
     g_game.lvl_text.text = g_game.level;
+    g_game.countdown_text.text = g_game.countdown;
+    if(g_game.countdown == 0){
+    	g_game.countdown_text.visible = false;
+    }
 }
 
 function check_boxes(){
@@ -415,6 +441,11 @@ SplashScreen.prototype = {
 		this.load.image('ballYellow', 'assets/gfx/ballYellow.png');
 		this.load.image('ballOrange', 'assets/gfx/ballOrange.png');
 
+    this.load.image('eye_open','assets/gfx/eye_open.png');
+    this.load.image('eye_closed','assets/gfx/eye_closed.png');
+    this.load.image('mouth_open','assets/gfx/mouth_open.png');
+    this.load.image('mouth_closed','assets/gfx/mouth_closed.png');
+    
 		this.load.image('ground', 'assets/gfx/ground.png');
 		this.load.image('world', 'assets/gfx/world.png');
 
@@ -422,8 +453,8 @@ SplashScreen.prototype = {
     
     this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');
     this.load.bitmapFont('digits', 'assets/fonts/digit_8x8.png','assets/fonts/digit_8x8.xml');
-    
   
+    
 	},
 	create: function() {
     g_game.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

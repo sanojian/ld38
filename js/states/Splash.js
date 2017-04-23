@@ -17,6 +17,11 @@ SplashScreen.prototype = {
 		this.load.image('ballYellow', 'assets/gfx/ballYellow.png');
 		this.load.image('ballOrange', 'assets/gfx/ballOrange.png');
 
+    this.load.image('eye_open','assets/gfx/eye_open.png');
+    this.load.image('eye_closed','assets/gfx/eye_closed.png');
+    this.load.image('mouth_open','assets/gfx/mouth_open.png');
+    this.load.image('mouth_closed','assets/gfx/mouth_closed.png');
+    
 		this.load.image('ground', 'assets/gfx/ground.png');
 		this.load.image('world', 'assets/gfx/world.png');
 
@@ -24,8 +29,8 @@ SplashScreen.prototype = {
     
     this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');
     this.load.bitmapFont('digits', 'assets/fonts/digit_8x8.png','assets/fonts/digit_8x8.xml');
-    
   
+    
 	},
 	create: function() {
     g_game.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

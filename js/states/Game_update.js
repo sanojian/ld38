@@ -2,7 +2,7 @@ GameState.prototype.update = function() {
 
   var self = this;
 
-  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false) {
+  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false && g_game.countdown == 0) {
 
     var currentBall = g_game.ball;
     //game.elements.shootSound.play();
@@ -82,6 +82,10 @@ function checkCollision(ball, boxes) {
 function update_text(){
 	g_game.score_text.text = g_game.score;
     g_game.lvl_text.text = g_game.level;
+    g_game.countdown_text.text = g_game.countdown;
+    if(g_game.countdown == 0){
+    	g_game.countdown_text.visible = false;
+    }
 }
 
 function check_boxes(){
