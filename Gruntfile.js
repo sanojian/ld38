@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 		concat: {
 			basic_and_extras: {
 				files: {
-					'public/js/index.js': ['js/main.js', 'js/**/*.js'],
+					'public/js/index.js': ['js/main.js','js/DEFS.js', 'js/**/*.js'],
 					'public/index.html': ['html/index.html']
 				}
 			}
