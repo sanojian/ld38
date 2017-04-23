@@ -60,7 +60,6 @@ GameState.prototype.create = function() {
     g_game.balls.add(ball);
     resetBall(game, ball);
     ball.body.onBeginContact.add(function(target) {
-      console.log(ball.colorIndex + ' vs ' + target.sprite.colorIndex);
       if (ball.colorIndex === target.sprite.colorIndex) {
         target.sprite.kill();
         ball.alpha = 0;

@@ -2,7 +2,7 @@ GameState.prototype.update = function() {
 
   var self = this;
 
-  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible == false && g_game.countdown == 0) {
+  if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible === false && g_game.countdown === 0) {
 
     var currentBall = g_game.ball;
     //game.elements.shootSound.play();
@@ -39,10 +39,11 @@ GameState.prototype.update = function() {
     delete g_game.swipe;
   }
 
-  checkWorldBoxesCollision();
-  update_text();
-  check_boxes();
-
+  if (!g_game.lost) {
+    checkWorldBoxesCollision();
+    update_text();
+    check_boxes();
+  }
 };
 
 function checkWorldBoxesCollision() {
@@ -53,6 +54,7 @@ function checkWorldBoxesCollision() {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       g_game.lost = true;
+      console.log('game lost');
       g_game.reset_game.dispatch();
     }
   });
@@ -69,7 +71,7 @@ function update_text(){
 }
 
 function check_boxes(){
-	if (!g_game.lost && g_game.boxes.countLiving() < 1) {
+	if (g_game.boxes.countLiving() < 1) {
 		g_game.next_level.dispatch();
 	}
 }

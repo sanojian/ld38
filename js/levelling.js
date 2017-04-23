@@ -36,6 +36,8 @@ function initReset(reset_game, balls, boxes, ground, game) {
     g_game.ground.reset(game.width/2, 500);
     g_game.score = 0;
     g_game.level = 0;
+    g_game.box_row_width = 2;
+    g_game.box_row_height = 1;
     g_game.boxes.removeAll(true);
 
     lose_text.visible = false;
@@ -47,6 +49,8 @@ function initReset(reset_game, balls, boxes, ground, game) {
       game.time.events.add(Phaser.Timer.SECOND * 2, function() {
         lose_text.visible = false;
         g_game.ground.body.velocity.y = g_game.ground_velocity;
+        var stack = initalizeStack(g_game.box_row_height, g_game.box_row_width);
+        stackBoxes(game, balls, boxes, g_game.box_row_height, g_game.box_row_width, ground, stack);
         g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
         g_game.lost = false;
 
