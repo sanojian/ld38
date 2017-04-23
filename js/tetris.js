@@ -129,7 +129,7 @@ g_game.shapes = [
 	}
 ];
 
-function stackBoxes(game, boxes, walls, balls, columns, rows, ground, stack) {
+function stackBoxes(game, balls, boxes, columns, rows, ground, stack) {
   for (var y = 0; y < stack.length; y++) {
     var box = game.add.sprite(0, 0, stack[y].name);
     box.x = ground.x - (columns * g_game.blockSize/2) + box.width/2 + stack[y].x * g_game.blockSize/2;
@@ -146,13 +146,11 @@ function stackBoxes(game, boxes, walls, balls, columns, rows, ground, stack) {
       box.body.angle = stack[y].angle;
     }
     box.colorIndex = stack[y].colorIndex;
-    box.body.setCollisionGroup(boxes);
-    box.body.collides([walls, boxes]);
     //box.body.debug = true;
     box.body.kinematic = true;
     box.body.velocity.y = ground.body.velocity.y;
     box.body.setCollisionGroup(boxes);
-    box.body.collides([walls, balls, boxes]);
+    box.body.collides([balls]);
     g_game.boxes.add(box);
   }
 }
