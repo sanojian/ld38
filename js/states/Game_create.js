@@ -24,10 +24,12 @@ GameState.prototype.create = function() {
   world.body.data.gravityScale = 0;
   g_game.world = world;
 
-  var ground_starting_pos = 500;
-  var ground_velocity = -15; 
-  var box_row_width = 4;
-  var box_row_height = 1;
+  var ground_starting_pos = 460;
+  var ground_velocity = -15;
+  //var box_row_width = 4;
+  //var box_row_height = 1;
+  var box_row_width = 8;
+  var box_row_height = 3;
 
   var ground = this.game.add.sprite(this.game.width/2, ground_starting_pos, 'ground');
   ground.anchor.set(0.5);
@@ -39,7 +41,6 @@ GameState.prototype.create = function() {
   ground.initFlag = false;
   g_game.ground = ground;
 
-  
 
   g_game.boxes = this.game.add.group();
 
@@ -53,18 +54,17 @@ GameState.prototype.create = function() {
     g_game.ground.reset(this.game.width/2, 500);
     g_game.score = 0;
     g_game.level = 0;
-    g_game.boxes.removeAll(true); 
-  for (var i = 0; i < box_row_width; i++) {
-    for (var j = 0; j < box_row_height; j++) {
-      var colorIndex = Math.floor(Math.random() * g_game.colors.length);
-       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
-    }
-  }
-  lose_text.visible = true;
-  this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){
-  lose_text.visible = false;
-   g_game.ground.body.velocity.y = ground_velocity;
-  }, this);
+    g_game.boxes.removeAll(true);
+
+    var stack = initalizeStack(box_row_height, box_row_width);
+    stackBoxes(this.game, boxes, walls, box_row_height, box_row_width, ground, stack);
+
+    lose_text.visible = true;
+    this.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+      lose_text.visible = false;
+      g_game.ground.body.velocity.y = ground_velocity;
+      g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
+    }, this);
 
   },this);
 
@@ -75,13 +75,13 @@ GameState.prototype.create = function() {
   	g_game.score+=g_game.SCORE_INTERVAL;
   },true);
   g_game.add_score = add_score;
-   
-   //its a new level! make everything harder >:D 
+
+   //its a new level! make everything harder >:D
    var naggers = ["AMAZING!","NICE!","MARVELOUS!","GOOD!"];
-  var win_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),naggers[this.game.rnd.integerInRange(0,naggers.length)],0.5,0.5);
+  var win_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),naggers[this.game.rnd.integerInRange(0,naggers.length-1)],0.5,0.5);
   win_text.visible = false;
   var next_level = new Phaser.Signal();
-  next_level.add(function(){
+  next_level.add(function() {
    ground_starting_pos+= 64;
    g_game.ground.reset(this.game.width/2, ground_starting_pos);
    ground_velocity-=4;
@@ -89,13 +89,16 @@ GameState.prototype.create = function() {
    g_game.boxes.removeAll(true);
    box_row_height+=1;
    g_game.level+=1;
-   for (var i = 0; i < box_row_width; i++) {
-   for (var j = 0; j < box_row_height; j++) {
-   var colorIndex = Math.floor(Math.random() * g_game.colors.length);
-   addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
-   }
-  }
-  win_text.text = naggers[this.game.rnd.integerInRange(0,naggers.length)];
+   /*for (var i = 0; i < box_row_width; i++) {
+     for (var j = 0; j < box_row_height; j++) {
+       var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+     }
+   }*/
+   var stack = initalizeStack(box_row_height, box_row_width);
+   stackBoxes(this.game, boxes, walls, box_row_height, box_row_width, ground, stack);
+
+  win_text.text = naggers[this.game.rnd.integerInRange(0,naggers.length-1)];
   win_text.visible = true;
   this.game.time.events.add(Phaser.Timer.SECOND * 0.2, function(){
   win_text.visible = false;
@@ -120,12 +123,14 @@ GameState.prototype.create = function() {
   }
 
 
-  for (var i = 0; i < box_row_width; i++) {
+  /*for (var i = 0; i < box_row_width; i++) {
     for (var j = 0; j < box_row_height; j++) {
       var colorIndex = Math.floor(Math.random() * g_game.colors.length);
        addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
     }
-  }
+  }*/
+
+
   g_game.balls = this.game.add.group();
 
   function addBall(index, game) {
@@ -162,17 +167,103 @@ GameState.prototype.create = function() {
   var lvl_text = add_digit_text(this.game,0,Math.round(lvl_dis_text.height),level.toString(),0,0);
   lvl_dis_text.addChild(lvl_text);
   score_dis_text.addChild(score_text);
- 
+
   g_game.level = level;
   g_game.score = score;
   g_game.lvl_text = lvl_text;
   g_game.score_text = score_text;
 
-
-
-
 };
 
+function stackBoxes(game, boxes, walls, columns, rows, ground, stack) {
+  for (var y = 0; y < stack.length; y++) {
+    var box = game.add.sprite(0, 0, stack[y].name);
+    box.x = ground.x - (columns * g_game.blockSize/2) + box.width/2 + stack[y].x * g_game.blockSize/2;
+    box.y = ground.y - ground.height/2 - box.height/2 - stack[y].y * g_game.blockSize/2;
+    game.physics.p2.enable(box, false);
+    var rects = g_game.shapeDefs[stack[y].name];
+    if (rects) {
+      box.body.clearShapes();
+      for (var i = 0; i < rects.length; i++) {
+        box.body.addRectangle(rects[i].w, rects[i].h, rects[i].x, rects[i].y);
+      }
+    }
+    if (stack[y].angle) {
+      box.body.angle = stack[y].angle;
+    }
+    box.body.setCollisionGroup(boxes);
+    box.body.collides([walls, boxes]);
+    box.body.debug = true;
+    box.body.kinematic = true;
+    box.body.velocity.y = ground.body.velocity.y;
+    box.body.setCollisionGroup(boxes);
+    box.body.collides([walls, boxes]);
+    g_game.boxes.add(box);
+  }
+}
+
+function initalizeStack(rows, columns) {
+  var grid = [];
+  var x, y;
+  for (y = 0; y < rows; y++) {
+    grid[y] = [];
+    for (x = 0; x < columns; x++) {
+      grid[y][x] = 0;
+    }
+  }
+
+  var stack = [];
+  for (y = 0; y < grid.length; y++) {
+    for (x = 0; x < grid[y].length; x++) {
+
+      if (grid[y][x] !== 1) {
+        var shape = findFittingShape(x, y, grid);
+        stack.push({ name: shape.name, angle: shape.pattern.angle , x: x, y: y, dx: shape.pattern.dx, dy: shape.pattern.dy });
+      }
+    }
+  }
+  return stack;
+}
+
+function findFittingShape(x, y, grid) {
+  var fits = false;
+  var shapes = g_game.shapes;
+  var i, j;
+
+  while (!fits) {
+    var idx = Math.floor(Math.random() * shapes.length);
+    var shape = shapes[idx];
+    fits = true;
+    for (j = 0; j < 3; j++) {
+      for (i = 0; i < 3; i++) {
+        if (shape.pattern.matrix[j*3 + i] === 1) {
+          if (i + x >= grid[y].length) {
+            fits = false;
+          }
+          else if (y + 2-j >= grid.length) {
+            fits = false;
+          }
+          else if (grid[y + 2-j][i + x] === 1) {
+            fits = false;
+          }
+        }
+      }
+    }
+
+    if (fits) {
+      // fill in grid
+      for (j = 0; j < 3; j++) {
+        for (i = 0; i < 3; i++) {
+          if ((i + x < grid[y].length) && (y + 2-j < grid.length)) {
+            grid[y + 2-j][i + x] = grid[y + 2-j][i + x] || shape.pattern.matrix[j*3 + i];
+          }
+        }
+      }
+
+      return shape;
+    }
+  }
+}
 
 function resetBall(game, ball) {
 
@@ -242,5 +333,3 @@ function add_digit_text(game,x,y,text,anchorX,anchorY){
 	bitmapText.fixedToCamera = true;
 	return bitmapText;
 }
-
-

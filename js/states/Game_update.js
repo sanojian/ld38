@@ -53,7 +53,7 @@ function checkWorldBoxesCollision() {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       g_game.reset_game.dispatch();
-      
+
     }
   });
 }
@@ -64,17 +64,17 @@ function checkCollision(ball, boxes) {
   boxes.forEach(function(box) {
     if (box.colorIndex !== ball.colorIndex) {
       // wrong color
-      return;
+      //return;
     }
     var boundsB = box.getBounds();
 
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       box.destroy();
-      if(g_game.score_flag == false){
+      if(g_game.score_flag === false){
       	g_game.add_score.dispatch();
 
-      } 
+      }
     }
   });
 }
