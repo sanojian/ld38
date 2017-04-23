@@ -44,16 +44,21 @@ GameState.prototype.create = function() {
 
   g_game.boxes = this.game.add.group();
 
-
+var countdown = 3;
+g_game.countdown = countdown;
+var countdown_text = add_digit_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),"3",0.5,0.5);
+g_game.countdown_text = countdown_text;
+  var lose_counter = 0;
   var lose_text = add_text(this.game,Math.round(this.game.width / 2),Math.round(this.game.height/2),"TRY AGAIN!",0.5,0.5);
   lose_text.visible = false;
   g_game.lose_text = lose_text;
-
   var reset_game = new Phaser.Signal();
   reset_game.add(function(){
+  	lose_counter+=1;
     g_game.ground.reset(this.game.width/2, 500);
     g_game.score = 0;
     g_game.level = 0;
+<<<<<<< HEAD
     g_game.boxes.removeAll(true);
 
     var stack = initalizeStack(box_row_height, box_row_width);
@@ -64,12 +69,44 @@ GameState.prototype.create = function() {
       lose_text.visible = false;
       g_game.ground.body.velocity.y = ground_velocity;
       g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
+=======
+    g_game.boxes.removeAll(true); 
+  for (var i = 0; i < box_row_width; i++) {
+    for (var j = 0; j < box_row_height; j++) {
+      var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+       addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+    }
+  }
+  if(lose_counter > 1){
+  lose_text.visible = true;
+  this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){
+  lose_text.visible = false;
+   g_game.ground.body.velocity.y = ground_velocity;
+  }, this);
+}else{
+	//first time playing
+	countdown=3;
+    this.game.time.events.repeat(Phaser.Timer.SECOND, 3, function(){
+    if(countdown > 0){
+    countdown-=1;
+    g_game.countdown = countdown;
+    
+
+     }
+     if(countdown == 0)
+     {
+      g_game.ground.body.velocity.y = ground_velocity;
+     }
+
+>>>>>>> e15ca401cfd8bd235bd52d057b34ce23039af7ea
     }, this);
 
+    }
   },this);
 
   g_game.SCORE_INTERVAL = 20;
   g_game.reset_game = reset_game;
+  reset_game.dispatch();
   var add_score = new Phaser.Signal();
   add_score.add(function(){
   	g_game.score+=g_game.SCORE_INTERVAL;
@@ -123,6 +160,7 @@ GameState.prototype.create = function() {
   }
 
 
+<<<<<<< HEAD
   /*for (var i = 0; i < box_row_width; i++) {
     for (var j = 0; j < box_row_height; j++) {
       var colorIndex = Math.floor(Math.random() * g_game.colors.length);
@@ -131,6 +169,14 @@ GameState.prototype.create = function() {
   }*/
 
 
+=======
+  // for (var i = 0; i < box_row_width; i++) {
+  //   for (var j = 0; j < box_row_height; j++) {
+  //     var colorIndex = Math.floor(Math.random() * g_game.colors.length);
+  //      addBox(this.game.width/2 - 96 + i*64, ground.y - 64 - j*64, colorIndex, this.game);
+  //   }
+  // }
+>>>>>>> e15ca401cfd8bd235bd52d057b34ce23039af7ea
   g_game.balls = this.game.add.group();
 
   function addBall(index, game) {
@@ -333,3 +379,7 @@ function add_digit_text(game,x,y,text,anchorX,anchorY){
 	bitmapText.fixedToCamera = true;
 	return bitmapText;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e15ca401cfd8bd235bd52d057b34ce23039af7ea
