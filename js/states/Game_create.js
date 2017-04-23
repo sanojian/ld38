@@ -63,6 +63,7 @@ GameState.prototype.create = function() {
       console.log(ball.colorIndex + ' vs ' + target.sprite.colorIndex);
       if (ball.colorIndex === target.sprite.colorIndex) {
         target.sprite.kill();
+        ball.alpha = 0;
         if(g_game.score_flag === false){
         	g_game.add_score.dispatch();
         }
@@ -114,6 +115,7 @@ function resetBall(game, ball) {
   ball.falling = false;
   ball.body.rotateRight(0);
   ball.scale.set(1);
+  ball.alpha = 1;
 
   ball.alpha = 1;
 

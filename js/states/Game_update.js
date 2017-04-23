@@ -52,6 +52,7 @@ function checkWorldBoxesCollision() {
 
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
+      g_game.lost = true;
       g_game.reset_game.dispatch();
     }
   });
@@ -68,7 +69,7 @@ function update_text(){
 }
 
 function check_boxes(){
-	if(g_game.boxes.countLiving() < 1){
+	if (!g_game.lost && g_game.boxes.countLiving() < 1) {
 		g_game.next_level.dispatch();
 	}
 }

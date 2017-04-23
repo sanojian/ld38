@@ -7,8 +7,6 @@ function add_text(game,x,y,text,anchorX,anchorY){
 	return bitmapText;
 }
 
-
-
 function add_digit_text(game,x,y,text,anchorX,anchorY){
   if (anchorX === undefined) {
     anchorX = 0;
@@ -26,7 +24,7 @@ function initReset(reset_game, balls, boxes, ground, game) {
 
   var countdown = 3;
   g_game.countdown = countdown;
-  var countdown_text = add_digit_text(game, Math.round(game.width / 2), Math.round(game.height/2),"3", 0.5, 0.5);
+  var countdown_text = add_digit_text(game, Math.round(game.width / 2), Math.round(game.height/2), countdown, 0.5, 0.5);
   g_game.countdown_text = countdown_text;
   var lose_counter = 0;
   var lose_text = add_text(game, Math.round(game.width / 2), Math.round(game.height/2), "TRY AGAIN!", 0.5, 0.5);
@@ -49,21 +47,22 @@ function initReset(reset_game, balls, boxes, ground, game) {
       game.time.events.add(Phaser.Timer.SECOND * 2, function() {
         lose_text.visible = false;
         g_game.ground.body.velocity.y = g_game.ground_velocity;
-
         g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
+        g_game.lost = false;
 
       }, this);
     } else {
       //first time playing
       countdown = 3;
       game.time.events.repeat(Phaser.Timer.SECOND, 3, function() {
-        if(countdown > 0) {
+        if (countdown > 0) {
           countdown -= 1;
           g_game.countdown = countdown;
         }
         if(countdown === 0) {
           g_game.ground.body.velocity.y = g_game.ground_velocity;
           g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
+          g_game.lost = false;
       }
       }, this);
     }
@@ -83,7 +82,7 @@ function initReset(reset_game, balls, boxes, ground, game) {
 
   //its a new level! make everything harder >:D
   var naggers = ["AMAZING!", "NICE!", "MARVELOUS!", "GOOD!"];
-  var win_text = add_text(game,Math.round(game.width / 2), Math.round(game.height/2), naggers[game.rnd.integerInRange(0, naggers.length-1)], 0.5, 0.5);
+  var win_text = add_text(game, Math.round(game.width / 2), Math.round(game.height/2), naggers[game.rnd.integerInRange(0, naggers.length-1)], 0.5, 0.5);
   win_text.visible = false;
   var next_level = new Phaser.Signal();
   next_level.add(function() {
@@ -94,6 +93,9 @@ function initReset(reset_game, balls, boxes, ground, game) {
     g_game.boxes.removeAll(true);
     g_game.box_row_height += 1;
     g_game.level += 1;
+    if (g_game.level % 2) {
+      g_game.box_row_width += 1;
+    }
 
     var stack = initalizeStack(g_game.box_row_height, g_game.box_row_width);
     stackBoxes(game, balls, boxes, g_game.box_row_height, g_game.box_row_width, ground, stack);
@@ -102,6 +104,8 @@ function initReset(reset_game, balls, boxes, ground, game) {
     win_text.visible = true;
     game.time.events.add(Phaser.Timer.SECOND * 1, function() {
       win_text.visible = false;
+      g_game.boxes.setAll('body.velocity.y', g_game.ground.body.velocity.y);
+      g_game.lost = false;
     }, this);
 
   }, this);
