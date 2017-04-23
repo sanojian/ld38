@@ -53,7 +53,6 @@ function checkWorldBoxesCollision() {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       g_game.reset_game.dispatch();
-
     }
   });
 }
@@ -63,7 +62,7 @@ function update_text(){
 	g_game.score_text.text = g_game.score;
     g_game.lvl_text.text = g_game.level;
     g_game.countdown_text.text = g_game.countdown;
-    if(g_game.countdown == 0){
+    if(g_game.countdown === 0) {
     	g_game.countdown_text.visible = false;
     }
 }

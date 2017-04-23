@@ -148,7 +148,7 @@ function stackBoxes(game, balls, boxes, columns, rows, ground, stack) {
     box.colorIndex = stack[y].colorIndex;
     //box.body.debug = true;
     box.body.kinematic = true;
-    box.body.velocity.y = ground.body.velocity.y;
+    //box.body.velocity.y = ground.body.velocity.y;
     box.body.setCollisionGroup(boxes);
     box.body.collides([balls]);
     g_game.boxes.add(box);
