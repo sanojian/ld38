@@ -137,9 +137,12 @@ GameState.prototype.create = function() {
     g_game.balls.add(ball);
     resetBall(game, ball);
     ball.body.onBeginContact.add(function(target) {
-      target.sprite.kill();
-      if(g_game.score_flag === false){
-      	g_game.add_score.dispatch();
+      console.log(ball.colorIndex + ' vs ' + target.sprite.colorIndex);
+      if (ball.colorIndex === target.sprite.colorIndex) {
+        target.sprite.kill();
+        if(g_game.score_flag === false){
+        	g_game.add_score.dispatch();
+        }
       }
     }, game);
   }
