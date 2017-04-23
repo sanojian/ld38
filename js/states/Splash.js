@@ -5,12 +5,6 @@ SplashScreen.prototype = {
 		this.load.image('splashBackground', 'assets/gfx/splashBackground.png');
 		this.load.image('background', 'assets/gfx/background.png');
 
-		/*this.load.image('boxRed', 'assets/gfx/boxRed.png');
-		this.load.image('boxGreen', 'assets/gfx/boxGreen.png');
-		this.load.image('boxBlue', 'assets/gfx/boxBlue.png');
-		this.load.image('boxYellow', 'assets/gfx/boxYellow.png');
-		this.load.image('boxOrange', 'assets/gfx/boxOrange.png');*/
-
 		this.load.image('el', 'assets/gfx/shapes/el.png');
 		this.load.image('el_long', 'assets/gfx/shapes/el_long.png');
 		this.load.image('box', 'assets/gfx/shapes/box.png');

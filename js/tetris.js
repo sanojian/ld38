@@ -29,83 +29,103 @@ g_game.shapeDefs = {
 g_game.shapes = [
 	{
 		name: 'el',
-		pattern: { angle:   0, matrix: [0,0,0,0,1,0,1,1,0] }
+		pattern: { angle:   0, matrix: [0,0,0,0,1,0,1,1,0] },
+    colorIndex: 2
 	},
 	{
 		name: 'el',
-		pattern: { angle:  90, matrix: [0,0,0,1,0,0,1,1,0] }
+		pattern: { angle:  90, matrix: [0,0,0,1,0,0,1,1,0] },
+    colorIndex: 2
 	},
 	{
 		name: 'el',
-		pattern: { angle: 180, matrix: [0,0,0,1,1,0,1,0,0] }
+		pattern: { angle: 180, matrix: [0,0,0,1,1,0,1,0,0] },
+    colorIndex: 2
 	},
 	{
 		name: 'el',
-		pattern: { angle: 270, matrix: [0,0,0,1,1,0,0,1,0] }
+		pattern: { angle: 270, matrix: [0,0,0,1,1,0,0,1,0] },
+    colorIndex: 2
 	},
 	{
 		name: 'el_long',
-		pattern: { angle: 0, matrix: [0,0,0,1,0,0,1,1,1] }
+		pattern: { angle: 0, matrix: [0,0,0,1,0,0,1,1,1] },
+    colorIndex: 4
 	},
 	{
 		name: 'el_long',
-		pattern: { angle: 90, matrix: [1,1,0,1,0,0,1,0,0] }
+		pattern: { angle: 90, matrix: [1,1,0,1,0,0,1,0,0] },
+    colorIndex: 4
 	},
 	{
 		name: 'el_long',
-		pattern: { angle: 180, matrix: [1,1,1,0,0,1,0,0,0] }
+		pattern: { angle: 180, matrix: [1,1,1,0,0,1,0,0,0] },
+    colorIndex: 4
 	},
 	{
 		name: 'el_long',
-		pattern: { angle: 270, matrix: [0,0,1,0,0,1,0,1,1] }
+		pattern: { angle: 270, matrix: [0,0,1,0,0,1,0,1,1] },
+    colorIndex: 4
 	},
 	{
 		name: 'box',
-		pattern: { angle:   0, matrix: [0,0,0,1,1,0,1,1,0] }
+		pattern: { angle:   0, matrix: [0,0,0,1,1,0,1,1,0] },
+    colorIndex: 3
 	},
 	{
 		name: 'I',
-		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,1] }
+		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,1] },
+    colorIndex: 0
 	},
 	{
 		name: 'I',
-		pattern: { angle:  90, matrix: [1,0,0,1,0,0,1,0,0] }
+		pattern: { angle:  90, matrix: [1,0,0,1,0,0,1,0,0] },
+    colorIndex: 0
 	},
 	{
 		name: 'zee',
-		pattern: { angle:   0, matrix: [0,0,0,0,1,1,1,1,0] }
+		pattern: { angle:   0, matrix: [0,0,0,0,1,1,1,1,0] },
+    colorIndex: 1
 	},
 	{
 		name: 'zee',
-		pattern: { angle:  90, matrix: [1,0,0,1,1,0,0,1,0] }
+		pattern: { angle:  90, matrix: [1,0,0,1,1,0,0,1,0] },
+    colorIndex: 1
 	},
 	{
 		name: 'tee',
-		pattern: { angle:   0, matrix: [0,0,0,0,1,0,1,1,1] }
+		pattern: { angle:   0, matrix: [0,0,0,0,1,0,1,1,1] },
+    colorIndex: 1
 	},
 	{
 		name: 'tee',
-		pattern: { angle:  90, matrix: [1,0,0,1,1,0,1,0,0] }
+		pattern: { angle:  90, matrix: [1,0,0,1,1,0,1,0,0] },
+    colorIndex: 1
 	},
 	{
 		name: 'tee',
-		pattern: { angle:  180, matrix: [1,1,1,0,1,0,0,0,0] }
+		pattern: { angle:  180, matrix: [1,1,1,0,1,0,0,0,0] },
+    colorIndex: 1
 	},
 	{
 		name: 'tee',
-		pattern: { angle:  270, matrix: [0,0,1,0,1,1,0,0,1] }
+		pattern: { angle:  270, matrix: [0,0,1,0,1,1,0,0,1] },
+    colorIndex: 1
 	},
 	{
 		name: 'box_half',
-		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,0,0] }
+		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,0,0] },
+    colorIndex: 3
 	},
 	{
 		name: 'box_flat',
-		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,0] }
+		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,0] },
+    colorIndex: 3
 	},
 	{
 		name: 'box_flat',
-		pattern: { angle:  90, matrix: [0,0,0,1,0,0,1,0,0] }
+		pattern: { angle:  90, matrix: [0,0,0,1,0,0,1,0,0] },
+    colorIndex: 3
 	}
 ];
 
@@ -125,6 +145,7 @@ function stackBoxes(game, boxes, walls, balls, columns, rows, ground, stack) {
     if (stack[y].angle) {
       box.body.angle = stack[y].angle;
     }
+    box.colorIndex = stack[y].colorIndex;
     box.body.setCollisionGroup(boxes);
     box.body.collides([walls, boxes]);
     //box.body.debug = true;
@@ -152,7 +173,7 @@ function initalizeStack(rows, columns) {
 
       if (grid[y][x] !== 1) {
         var shape = findFittingShape(x, y, grid);
-        stack.push({ name: shape.name, angle: shape.pattern.angle , x: x, y: y, dx: shape.pattern.dx, dy: shape.pattern.dy });
+        stack.push({ name: shape.name, angle: shape.pattern.angle , colorIndex: shape.colorIndex, x: x, y: y, dx: shape.pattern.dx, dy: shape.pattern.dy });
       }
     }
   }
