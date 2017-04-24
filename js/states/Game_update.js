@@ -78,6 +78,7 @@ function checkWorldBoxesCollision() {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       g_game.lost = true;
+      play_sound(g_game.sfx.lose);
       console.log('game lost');
       add_text(box.game, box.game.width/2, box.game.height/2, 'INFECTION', 0.5, 0.5);
       g_game.boxes.setAll('body.velocity.y', 0);
