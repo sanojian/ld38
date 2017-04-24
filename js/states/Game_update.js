@@ -116,7 +116,7 @@ function check_boxes() {
       }
     }
   });
-  console.log(livingBad);
+
   if (livingBad === 0) {
     // TODO: show bonus on SplashScreen
     if (g_game.score_flag === false){
@@ -125,7 +125,4 @@ function check_boxes() {
 
     g_game.next_level.dispatch();
   }
-	//if (g_game.boxes.countLiving() < 1) {
-	//	g_game.next_level.dispatch();
-	//}
 }
