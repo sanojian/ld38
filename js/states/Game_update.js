@@ -101,8 +101,30 @@ function update_text(){
     }
 }
 
-function check_boxes(){
-	if (g_game.boxes.countLiving() < 1) {
-		g_game.next_level.dispatch();
-	}
+function check_boxes() {
+
+  var livingBad = 0;
+  var livingGood = 0;
+
+  g_game.boxes.forEach(function(box) {
+    if (box.alive) {
+      if (box.colorIndex === -1) {
+        livingGood++;
+      } else {
+        livingBad++;
+      }
+    }
+  });
+  console.log(livingBad);
+  if (livingBad === 0) {
+    // TODO: show bonus on SplashScreen
+    if (g_game.score_flag === false){
+      g_game.add_score.dispatch();
+    }
+
+    g_game.next_level.dispatch();
+  }
+	//if (g_game.boxes.countLiving() < 1) {
+	//	g_game.next_level.dispatch();
+	//}
 }

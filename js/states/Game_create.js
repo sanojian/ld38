@@ -50,7 +50,13 @@ GameState.prototype.create = function() {
     g_game.balls.add(ball);
     resetBall(game, ball);
     ball.body.onBeginContact.add(function(target) {
-      if (ball.colorIndex === target.sprite.colorIndex) {
+      if (target.sprite.colorIndex === -1) {
+        // nice bug
+        target.sprite.kill();
+        play_sound(g_game.sfx.hit);
+      }
+      else if (ball.colorIndex === target.sprite.colorIndex) {
+        // bad bug color match
         target.sprite.kill();
         play_sound(g_game.sfx.hit);
         //ball.alpha = 0;
