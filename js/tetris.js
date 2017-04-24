@@ -118,6 +118,11 @@ g_game.shapes = [
     colorIndex: 3
 	},
 	{
+		name: 'box_half_good',
+		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,0,0] },
+    colorIndex: -1
+	},
+	{
 		name: 'box_flat',
 		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,0] },
     colorIndex: 4

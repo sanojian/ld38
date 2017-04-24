@@ -12,6 +12,7 @@ SplashScreen.prototype = {
 		this.load.spritesheet('zee', 'assets/gfx/shapes/zee.png',96,96);
 		this.load.spritesheet('tee', 'assets/gfx/shapes/tee.png',96,96);
 		this.load.spritesheet('box_half', 'assets/gfx/shapes/box_half.png',32,32);
+		this.load.spritesheet('box_half_good', 'assets/gfx/shapes/box_half_good.png',32,32);
 		this.load.spritesheet('box_flat', 'assets/gfx/shapes/box_flat.png',64,64);
 
 		this.load.image('pillBackground', 'assets/gfx/pillBackground.png');
