@@ -4,6 +4,8 @@ var GameState = function(game) {
 
 GameState.prototype.create = function() {
 
+  g_game.readyForRestart = false;
+
   this.game.add.image(0, 0, 'background');
   this.game.physics.startSystem(Phaser.Physics.P2JS);
   this.game.physics.p2.restitution = 0.4;
@@ -60,7 +62,7 @@ GameState.prototype.create = function() {
   addBall(4, this.game);
 
   g_game.elasticBand = this.game.add.graphics(0, 0);
-  
+
   // add events to check for swipe
   this.game.input.onDown.add(start_swipe, this);
   this.game.input.onUp.add(end_swipe, this);

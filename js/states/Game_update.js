@@ -1,5 +1,12 @@
 GameState.prototype.update = function() {
 
+  if (g_game.lost) {
+    if (g_game.readyForRestart && this.game.input.activePointer.isDown) {
+      this.game.state.start('game');
+    }
+    return;
+  }
+
   var self = this;
 
   if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible === false && g_game.countdown === 0) {
@@ -34,16 +41,14 @@ GameState.prototype.update = function() {
   if (g_game.start_swipe_point) {
     g_game.elasticBand.lineStyle(6, 0xff00ff, 0.7);
     g_game.elasticBand.moveTo(g_game.ball.x, g_game.ball.y);
-    //g_game.elasticBand.lineTo(this.game.width/2, this.game.height/2);
     g_game.elasticBand.lineTo(this.game.input.activePointer.x, this.game.input.activePointer.y);
   }
 
 
-  if (!g_game.lost) {
-    checkWorldBoxesCollision();
-    update_text();
-    check_boxes();
-  }
+  checkWorldBoxesCollision();
+  update_text();
+  check_boxes();
+
 };
 
 function checkWorldBoxesCollision() {
@@ -55,7 +60,14 @@ function checkWorldBoxesCollision() {
     if (collide) {
       g_game.lost = true;
       console.log('game lost');
-      g_game.reset_game.dispatch();
+      add_text(box.game, box.game.width/2, box.game.height/2, 'INFECTION', 0.5, 0.5);
+      g_game.boxes.setAll('body.velocity.y', 0);
+      box.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+        add_text(box.game, box.game.width/2, box.game.height/2 + 24, 'CLICK TO RESTART', 0.5, 0.5);
+        g_game.readyForRestart = true;
+      });
+      //box.game.state.start('game');
+      //g_game.reset_game.dispatch();
     }
   });
 }
