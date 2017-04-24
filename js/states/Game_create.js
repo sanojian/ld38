@@ -5,6 +5,9 @@ var GameState = function(game) {
 GameState.prototype.create = function() {
 
   g_game.readyForRestart = false;
+  g_game.ground_velocity = g_game.STARTING_VELOCITY;
+	g_game.box_row_width = g_game.STARTING_ROWS;
+	g_game.box_row_height = g_game.STARTING_COLUMNS;
 
   this.game.add.image(0, 0, 'background');
   this.game.physics.startSystem(Phaser.Physics.P2JS);
