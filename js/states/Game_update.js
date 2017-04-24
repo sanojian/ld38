@@ -12,8 +12,7 @@ GameState.prototype.update = function() {
   if (g_game.swipe && g_game.ball.canBeShot && g_game.lose_text.visible === false && g_game.countdown === 0) {
 
     var currentBall = g_game.ball;
-    //game.elements.shootSound.play();
-
+    play_sound(g_game.sfx.throw);
     shotAngle = g_game.swipe.angle;
 
     var strength = 600 + g_game.swipe.length*2;

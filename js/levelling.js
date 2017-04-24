@@ -38,7 +38,7 @@ function initReset(reset_game, balls, boxes, game) {
     g_game.box_row_width = 2;
     g_game.box_row_height = 1;
     g_game.boxes.removeAll(true);
-
+    play_sound(g_game.sfx.lose);
     lose_text.visible = false;
     g_game.boxes.removeAll(true);
 
@@ -59,11 +59,13 @@ function initReset(reset_game, balls, boxes, game) {
         if (countdown > 0) {
           countdown -= 1;
           g_game.countdown = countdown;
+          play_sound(g_game.sfx.countdown);
         }
         if(countdown === 0) {
           g_game.boxes.setAll('body.velocity.y', g_game.ground_velocity);
           g_game.lost = false;
-      }
+          play_sound(g_game.sfx.countdown_finished);     
+ }
       }, this);
     }
   }, this);
@@ -94,7 +96,6 @@ function initReset(reset_game, balls, boxes, game) {
     if (g_game.level % 2) {
       g_game.box_row_width += 1;
     }
-
     var stack = initalizeStack(g_game.box_row_height, g_game.box_row_width);
     stackBoxes(game, balls, boxes, g_game.box_row_height, g_game.box_row_width, stack);
 
@@ -104,6 +105,7 @@ function initReset(reset_game, balls, boxes, game) {
       win_text.visible = false;
       g_game.boxes.setAll('body.velocity.y', g_game.ground_velocity);
       g_game.lost = false;
+    play_sound(g_game.sfx.level_start);
     }, this);
 
   }, this);

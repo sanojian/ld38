@@ -9,6 +9,9 @@ GameState.prototype.create = function() {
 	g_game.box_row_width = g_game.STARTING_ROWS;
 	g_game.box_row_height = g_game.STARTING_COLUMNS;
 
+  //sounds
+  init_sounds(this.game);
+
   this.game.add.image(0, 0, 'background');
   this.game.physics.startSystem(Phaser.Physics.P2JS);
   this.game.physics.p2.restitution = 0.4;
@@ -49,6 +52,7 @@ GameState.prototype.create = function() {
     ball.body.onBeginContact.add(function(target) {
       if (ball.colorIndex === target.sprite.colorIndex) {
         target.sprite.kill();
+        play_sound(g_game.sfx.hit);
         //ball.alpha = 0;
         //resetBall(this, ball);
         if(g_game.score_flag === false){
@@ -105,7 +109,23 @@ function resetBall(game, ball) {
   ball.body.rotateRight(0);
   ball.scale.set(1);
   ball.alpha = 1;
-
+  ball.scale.setTo(1,1);
   ball.alpha = 1;
 
+}
+
+function init_sounds(game){
+g_game.sfx.lose = game.add.sound('lose');
+g_game.sfx.countdown = game.add.sound('countdown');
+g_game.sfx.countdown_finished = game.add.sound('countdown_finished');
+g_game.sfx.hit = game.add.sound('hit');
+g_game.sfx.level_start = game.add.sound('level_start');
+g_game.sfx.throw = game.add.sound('throw');
+}
+
+function play_sound(sound){
+if(!sound.isPlaying){
+    sound.play();
+    sound.volume = g_game.masterVolume;
+}
 }
