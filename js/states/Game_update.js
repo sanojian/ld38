@@ -38,9 +38,29 @@ GameState.prototype.update = function() {
   // draw elastic shooting band
   g_game.elasticBand.clear();
   if (g_game.start_swipe_point) {
-    g_game.elasticBand.lineStyle(6, 0xff00ff, 0.7);
+    var dx = this.game.input.activePointer.x - g_game.ball.x;
+    var dy = this.game.input.activePointer.y - g_game.ball.y;
+    var totalDist = Math.sqrt(dx * dx + dy * dy);
+    var angle = Math.atan2(this.game.input.activePointer.y - g_game.ball.y, this.game.input.activePointer.x - g_game.ball.x);
+
+    g_game.elasticBand.lineStyle(5, 0xff00ff, 0.7);
     g_game.elasticBand.moveTo(g_game.ball.x, g_game.ball.y);
-    g_game.elasticBand.lineTo(this.game.input.activePointer.x, this.game.input.activePointer.y);
+    var curX = g_game.ball.x;
+    var curY = g_game.ball.y;
+    var c = 1;
+    while (totalDist > 0) {
+      curX += 10 * Math.cos(angle);
+      curY += 10 * Math.sin(angle);
+      if (c % 2) {
+        g_game.elasticBand.lineTo(curX, curY);
+      }
+      else {
+        g_game.elasticBand.moveTo(curX, curY);
+      }
+      totalDist -= 10;
+      c++;
+    }
+
   }
 
 
