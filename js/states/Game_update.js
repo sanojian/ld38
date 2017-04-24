@@ -7,15 +7,8 @@ GameState.prototype.update = function() {
     var currentBall = g_game.ball;
     //game.elements.shootSound.play();
 
-    // shot assist
-    //var angleToMakeBasket = game.physics.arcade.angleToXY	game.elements.bball, game.elements.rim.x + (game.elements.bball.body.x - game.elements.rim.x)/2,	game.elements.rim.y - 300
-
-    // avg perfect shot and players shot
-    //shotAngle = (game.elements.swipe.angle + angleToMakeBasket) / 2
     shotAngle = g_game.swipe.angle;
 
-    //g_game.ball.body.velocity.x = 1300 * Math.cos(shotAngle);
-    //g_game.ball.body.velocity.y = 1300 * Math.sin(shotAngle);
     var strength = 600 + g_game.swipe.length*2;
     currentBall.body.velocity.x = strength * Math.cos(shotAngle);
     currentBall.body.velocity.y = strength * Math.sin(shotAngle);
@@ -30,14 +23,21 @@ GameState.prototype.update = function() {
     currentBall.mySpin = 20 - Math.random() * 40;
     currentBall.body.rotateRight(currentBall.mySpin);
 
-    // timer tells when the ball reaches distance
-    //this.game.time.events.add(Phaser.Timer.SECOND * 0.6, function() { checkCollision(currentBall, g_game.boxes, this); });
-
     // reset the ball to be thrown again
     this.game.time.events.add(Phaser.Timer.SECOND * 0.6, function() { resetBall(self.game, currentBall, this); });
 
     delete g_game.swipe;
   }
+
+  // draw elastic shooting band
+  g_game.elasticBand.clear();
+  if (g_game.start_swipe_point) {
+    g_game.elasticBand.lineStyle(6, 0xff00ff, 0.7);
+    g_game.elasticBand.moveTo(g_game.ball.x, g_game.ball.y);
+    //g_game.elasticBand.lineTo(this.game.width/2, this.game.height/2);
+    g_game.elasticBand.lineTo(this.game.input.activePointer.x, this.game.input.activePointer.y);
+  }
+
 
   if (!g_game.lost) {
     checkWorldBoxesCollision();

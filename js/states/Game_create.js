@@ -59,6 +59,8 @@ GameState.prototype.create = function() {
   addBall(3, this.game);
   addBall(4, this.game);
 
+  g_game.elasticBand = this.game.add.graphics(0, 0);
+  
   // add events to check for swipe
   this.game.input.onDown.add(start_swipe, this);
   this.game.input.onUp.add(end_swipe, this);
