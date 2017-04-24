@@ -5,14 +5,14 @@ SplashScreen.prototype = {
 		this.load.image('splashBackground', 'assets/gfx/splashBackground.png');
 		this.load.image('background', 'assets/gfx/background.png');
 
-		this.load.image('el', 'assets/gfx/shapes/el.png');
-		this.load.image('el_long', 'assets/gfx/shapes/el_long.png');
-		this.load.image('box', 'assets/gfx/shapes/box.png');
-		this.load.image('I', 'assets/gfx/shapes/I.png');
-		this.load.image('zee', 'assets/gfx/shapes/zee.png');
-		this.load.image('tee', 'assets/gfx/shapes/tee.png');
-		this.load.image('box_half', 'assets/gfx/shapes/box_half.png');
-		this.load.image('box_flat', 'assets/gfx/shapes/box_flat.png');
+		this.load.spritesheet('el', 'assets/gfx/shapes/el.png',64,64);
+		this.load.spritesheet('el_long', 'assets/gfx/shapes/el_long.png',96,96);
+		this.load.spritesheet('box', 'assets/gfx/shapes/box.png',64,64);
+		this.load.spritesheet('I', 'assets/gfx/shapes/I.png',96,96);
+		this.load.spritesheet('zee', 'assets/gfx/shapes/zee.png',96,96);
+		this.load.spritesheet('tee', 'assets/gfx/shapes/tee.png',96,96);
+		this.load.spritesheet('box_half', 'assets/gfx/shapes/box_half.png',32,32);
+		this.load.spritesheet('box_flat', 'assets/gfx/shapes/box_flat.png',64,64);
 
 		this.load.image('pillBackground', 'assets/gfx/pillBackground.png');
 

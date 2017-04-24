@@ -120,18 +120,19 @@ g_game.shapes = [
 	{
 		name: 'box_flat',
 		pattern: { angle:   0, matrix: [0,0,0,0,0,0,1,1,0] },
-    colorIndex: 3
+    colorIndex: 4
 	},
 	{
 		name: 'box_flat',
 		pattern: { angle:  90, matrix: [0,0,0,1,0,0,1,0,0] },
-    colorIndex: 3
+    colorIndex: 4
 	}
 ];
 
 function stackBoxes(game, balls, boxes, columns, rows, ground, stack) {
   for (var y = 0; y < stack.length; y++) {
     var box = game.add.sprite(game.width/2, game.height/2, stack[y].name);
+    //var anim_loop = box.animations.add('loop').play('loop',1,true);
     box.x = ground.x - (columns * g_game.blockSize/4) + box.width/2 + stack[y].x * g_game.blockSize/2;
     box.y = ground.y - ground.height/2 - box.height/2 - stack[y].y * g_game.blockSize/2;
     game.physics.p2.enable(box, false);
