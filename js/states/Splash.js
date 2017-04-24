@@ -33,12 +33,12 @@ SplashScreen.prototype = {
     this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');
     this.load.bitmapFont('digits', 'assets/fonts/digit_8x8.png','assets/fonts/digit_8x8.xml');
 
-    this.load.audio('countdown', 'assets/sounds/countdown.ogg');
-    this.load.audio('countdown_finished', 'assets/sounds/countdown_finished.ogg');
-    this.load.audio('hit', 'assets/sounds/hit.ogg');
-    this.load.audio('lose', 'assets/sounds/lose.ogg');
-    this.load.audio('level_start', 'assets/sounds/level_start.ogg');
-    this.load.audio('throw', 'assets/sounds/throw.ogg');
+    this.load.audio('countdown', ['assets/sounds/countdown.ogg', 'assets/sounds/countdown.wav']);
+    this.load.audio('countdown_finished', ['assets/sounds/countdown_finished.ogg', 'assets/sounds/countdown_finished.wav']);
+    this.load.audio('hit', ['assets/sounds/hit.ogg', 'assets/sounds/hit.wav']);
+    this.load.audio('lose', ['assets/sounds/lose.ogg', 'assets/sounds/lose.wav']);
+    this.load.audio('level_start', ['assets/sounds/level_start.ogg', 'assets/sounds/level_start.wav']);
+    this.load.audio('throw', ['assets/sounds/throw.ogg', 'assets/sounds/throw.wav']);
 
 	},
 	create: function() {

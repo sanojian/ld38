@@ -38,7 +38,7 @@ function initReset(reset_game, balls, boxes, game) {
     g_game.box_row_width = 2;
     g_game.box_row_height = 1;
     g_game.boxes.removeAll(true);
-    play_sound(g_game.sfx.lose);
+    
     lose_text.visible = false;
     g_game.boxes.removeAll(true);
 
@@ -64,7 +64,7 @@ function initReset(reset_game, balls, boxes, game) {
         if(countdown === 0) {
           g_game.boxes.setAll('body.velocity.y', g_game.ground_velocity);
           g_game.lost = false;
-          play_sound(g_game.sfx.countdown_finished);     
+          play_sound(g_game.sfx.countdown_finished);
  }
       }, this);
     }

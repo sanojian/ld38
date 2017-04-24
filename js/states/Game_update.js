@@ -78,6 +78,7 @@ function checkWorldBoxesCollision() {
     var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
     if (collide) {
       g_game.lost = true;
+      play_sound(g_game.sfx.lose);
       console.log('game lost');
       add_text(box.game, box.game.width/2, box.game.height/2, 'INFECTION', 0.5, 0.5);
       g_game.boxes.setAll('body.velocity.y', 0);
@@ -115,7 +116,7 @@ function check_boxes() {
       }
     }
   });
-  console.log(livingBad);
+
   if (livingBad === 0) {
     // TODO: show bonus on SplashScreen
     if (g_game.score_flag === false){
@@ -124,7 +125,4 @@ function check_boxes() {
 
     g_game.next_level.dispatch();
   }
-	//if (g_game.boxes.countLiving() < 1) {
-	//	g_game.next_level.dispatch();
-	//}
 }
