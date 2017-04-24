@@ -24,7 +24,7 @@ GameState.prototype.update = function() {
     currentBall.canBeShot = false;
     // shrinking as it moves away
     this.add.tween(currentBall.scale)
-    	.to({ x: 0.3, y: 0.3 }, 500, "Linear", true);
+      .to({ x: 0.3, y: 0.3 }, 500, "Linear", true);
 
     // give ball random spin
     currentBall.mySpin = 20 - Math.random() * 40;
@@ -47,7 +47,7 @@ GameState.prototype.update = function() {
 };
 
 function checkWorldBoxesCollision() {
-  var boundsA = g_game.world.getBounds();
+  var boundsA = g_game.pillBackground.getBounds();
   g_game.boxes.forEach(function(box) {
     var boundsB = box.getBounds();
 
@@ -66,7 +66,7 @@ function update_text(){
     g_game.lvl_text.text = g_game.level;
     g_game.countdown_text.text = g_game.countdown;
     if(g_game.countdown === 0) {
-    	g_game.countdown_text.visible = false;
+      g_game.countdown_text.visible = false;
     }
 }
 

@@ -27,9 +27,6 @@ SplashScreen.prototype = {
     this.load.image('mouth_open','assets/gfx/mouth_open.png');
     this.load.image('mouth_closed','assets/gfx/mouth_closed.png');
 
-		this.load.image('ground', 'assets/gfx/ground.png');
-		this.load.image('world', 'assets/gfx/world.png');
-
 		this.load.spritesheet('explosion', 'assets/gfx/explosion.png', 32, 32);
 
     this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');

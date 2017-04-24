@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 			options: {
 				evil: true
 			},
-			all: ['js/*.js']
+			all: ['js/*/*.js']
 		},
     'http-server': {
       dev: {

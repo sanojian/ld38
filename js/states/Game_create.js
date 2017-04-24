@@ -17,32 +17,14 @@ GameState.prototype.create = function() {
   var balls = this.game.physics.p2.createCollisionGroup();
   var walls = this.game.physics.p2.createCollisionGroup();
 
-  var world = this.game.add.sprite(this.game.width/2, -160, 'world');
-  world.anchor.set(0.5);
-  this.game.physics.p2.enable(world, false);
-  world.body.setCircle(world.width/2);
-  world.body.collideWorldBounds = false;
-  world.body.data.gravityScale = 0;
-  g_game.world = world;
-
-  var ground = this.game.add.sprite(this.game.width/2, g_game.ground_starting_pos, 'ground');
-  ground.anchor.set(0.5);
-  this.game.physics.p2.enable(ground, false);
-  ground.body.kinematic = true;
-  ground.body.velocity.y = g_game.ground_velocity;
-  ground.body.setCollisionGroup(walls);
-  ground.body.collides([boxes]);
-  ground.initFlag = false;
-  g_game.ground = ground;
-
   g_game.boxes = this.game.add.group();
 
   var reset_game = new Phaser.Signal();
 
-  initReset(reset_game, balls, boxes, ground, this.game);
+  initReset(reset_game, balls, boxes, this.game);
 
-  var pillBack = this.game.add.sprite(this.game.width/2, 550, 'pillBackground');
-  pillBack.anchor.set(0.5);
+  g_game.pillBackground = this.game.add.sprite(this.game.width/2, 550, 'pillBackground');
+  g_game.pillBackground.anchor.set(0.5);
 
 
   g_game.balls = this.game.add.group();
@@ -62,9 +44,10 @@ GameState.prototype.create = function() {
     ball.body.onBeginContact.add(function(target) {
       if (ball.colorIndex === target.sprite.colorIndex) {
         target.sprite.kill();
-        ball.alpha = 0;
+        //ball.alpha = 0;
+        //resetBall(this, ball);
         if(g_game.score_flag === false){
-        	g_game.add_score.dispatch();
+          g_game.add_score.dispatch();
         }
       }
     }, game);
