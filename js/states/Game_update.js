@@ -75,19 +75,27 @@ function checkWorldBoxesCollision() {
   g_game.boxes.forEach(function(box) {
     var boundsB = box.getBounds();
 
-    var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
-    if (collide) {
-      g_game.lost = true;
-      play_sound(g_game.sfx.lose);
-      console.log('game lost');
-      add_text(box.game, box.game.width/2, box.game.height/2, 'INFECTION', 0.5, 0.5);
-      g_game.boxes.setAll('body.velocity.y', 0);
-      box.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
-        add_text(box.game, box.game.width/2, box.game.height/2 + 24, 'CLICK TO RESTART', 0.5, 0.5);
-        g_game.readyForRestart = true;
-      });
-      //box.game.state.start('game');
-      //g_game.reset_game.dispatch();
+    if (box.alive) {
+      var collide = Phaser.Rectangle.intersects(boundsA, boundsB);
+      if (collide) {
+        if (box.colorIndex == -1) {
+          box.kill();
+          if(g_game.score_flag === false){
+            g_game.add_score.dispatch();
+          }
+        }
+        else {
+          g_game.lost = true;
+          play_sound(g_game.sfx.lose);
+          console.log('game lost');
+          add_text(box.game, box.game.width/2, box.game.height/2, 'INFECTION', 0.5, 0.5);
+          g_game.boxes.setAll('body.velocity.y', 0);
+          box.game.time.events.add(Phaser.Timer.SECOND * 2, function() {
+            add_text(box.game, box.game.width/2, box.game.height/2 + 24, 'CLICK TO RESTART', 0.5, 0.5);
+            g_game.readyForRestart = true;
+          });
+        }
+      }
     }
   });
 }
