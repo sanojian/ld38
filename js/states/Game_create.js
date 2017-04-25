@@ -50,14 +50,28 @@ GameState.prototype.create = function() {
     g_game.balls.add(ball);
     resetBall(game, ball);
     ball.body.onBeginContact.add(function(target) {
+      function killBug(bug) {
+        if (bug) {
+          cx = bug.sprite.x - bug.sprite.anchor.x * bug.sprite.width  + bug.sprite.data.center.x;
+          cy = bug.sprite.y - bug.sprite.anchor.y * bug.sprite.height + bug.sprite.data.center.y;
+          var splort = game.add.sprite(cx, cy, 'splort');
+          splort.anchor.set(0.5, 0.5);
+          var anim = splort.animations.add('animation');
+          splort.animations.play('animation', 10, false);
+          splort.animations.currentAnim.onComplete.add(function(){
+            splort.kill();
+          }, this);
+          bug.sprite.kill();
+        }
+      }
       if (target.sprite.colorIndex === -1) {
         // nice bug
-        target.sprite.kill();
+        killBug(target);
         play_sound(g_game.sfx.hit);
       }
       else if (ball.colorIndex === target.sprite.colorIndex) {
-        // bad bug color match
-        target.sprite.kill();
+        // bug color match
+        killBug(target);
         play_sound(g_game.sfx.hit);
         //ball.alpha = 0;
         //resetBall(this, ball);

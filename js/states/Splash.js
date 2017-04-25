@@ -28,7 +28,8 @@ SplashScreen.prototype = {
     this.load.image('mouth_open','assets/gfx/mouth_open.png');
     this.load.image('mouth_closed','assets/gfx/mouth_closed.png');
 
-		this.load.spritesheet('explosion', 'assets/gfx/explosion.png', 32, 32);
+		// this.load.spritesheet('explosion', 'assets/gfx/explosion.png', 32, 32);
+	this.load.spritesheet('splort', 'assets/gfx/splort.png', 64, 64, 4);
 
     this.load.bitmapFont('titlescreen', 'assets/fonts/titlescreen.png', 'assets/fonts/titlescreen.xml');
     this.load.bitmapFont('digits', 'assets/fonts/digit_8x8.png','assets/fonts/digit_8x8.xml');

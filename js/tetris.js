@@ -1,29 +1,47 @@
 g_game.shapeDefs = {
-	el: [
-		{ x: g_game.blockSize/4, y: -g_game.blockSize/4, w: g_game.blockSize/2, h: g_game.blockSize/2 },
-		{ x: 0, y: g_game.blockSize/4, w: g_game.blockSize, h: g_game.blockSize/2 }
-		//{ x: 0, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
-		//{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
-	],
-	el_long: [
-		{ x: -g_game.blockSize/2, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
-		{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
-	],
-	I: [
-		{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
-	],
-	tee: [
-		{ x: 0, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
-		{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
-	],
-	zee: [
-		{ x: g_game.blockSize/4, y: 0, w: g_game.blockSize, h: g_game.blockSize/2 },
-		{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
-	],
-	box_flat: [
-		{ x: 0, y: g_game.blockSize/4, w: g_game.blockSize, h: g_game.blockSize/2 },
-		//{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
-	]
+	el: {
+		center: { x: 48, y: 48 },
+		rects: [
+			{ x: g_game.blockSize/4, y: -g_game.blockSize/4, w: g_game.blockSize/2, h: g_game.blockSize/2 },
+			{ x: 0, y: g_game.blockSize/4, w: g_game.blockSize, h: g_game.blockSize/2 }
+			//{ x: 0, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
+			//{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
+		]
+	},
+	el_long: {
+		center: { x: 32, y: 64 },
+		rects: [
+			{ x: -g_game.blockSize/2, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
+			{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
+		]
+	},
+	I: {
+		center: { x: 48, y: 72 },
+		rects: [
+			{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
+		]
+	},
+	tee: {
+		center: { x: 48, y: 64 },
+		rects: [
+			{ x: 0, y: 0, w: g_game.blockSize/2, h: g_game.blockSize/2 },
+			{ x: 0, y: g_game.blockSize/2, w: 3*g_game.blockSize/2, h: g_game.blockSize/2 }
+		]
+	},
+	zee: {
+		center: { x: 48, y: 64 },
+		rects: [
+			{ x: g_game.blockSize/4, y: 0, w: g_game.blockSize, h: g_game.blockSize/2 },
+			{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
+		]
+	},
+	box_flat: {
+		center: { x: g_game.blockSize/2, y: g_game.blockSize*3/4 },
+		rects: [
+			{ x: 0, y: g_game.blockSize/4, w: g_game.blockSize, h: g_game.blockSize/2 },
+			//{ x: -g_game.blockSize/4, y: g_game.blockSize/2, w: g_game.blockSize, h: g_game.blockSize/2 }
+		]
+	},
 };
 
 g_game.shapes = [
@@ -141,14 +159,19 @@ function stackBoxes(game, balls, boxes, columns, rows, stack) {
     box.x = game.width/2 - (columns * g_game.blockSize/4) + box.width/2 + stack[y].x * g_game.blockSize/2;
     box.y = 200 - box.height/2 - stack[y].y * g_game.blockSize/2;
     game.physics.p2.enable(box, false);
-    var rects = g_game.shapeDefs[stack[y].name];
-    if (rects) {
+    var def = g_game.shapeDefs[stack[y].name];
+    if (def) {
+      box.data.center = new Phaser.Point(def.center.x, def.center.y);
+      var rects = def.rects;
       box.body.clearShapes();
       for (var i = 0; i < rects.length; i++) {
         box.body.addRectangle(rects[i].w, rects[i].h, rects[i].x, rects[i].y);
       }
+    } else {
+      box.data.center = new Phaser.Point(box.width/2, box.height/2);
     }
     if (stack[y].angle) {
+      box.data.center = Phaser.Point.rotate(box.data.center, box.width/2, box.height/2, stack[y].angle, true);
       box.body.angle = stack[y].angle;
     }
     box.colorIndex = stack[y].colorIndex;
